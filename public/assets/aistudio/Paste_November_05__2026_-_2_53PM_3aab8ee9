@@ -1,0 +1,344 @@
+Berikut rancangan Master TERNIVA – Document Management yang bisa dijadikan dasar pengembangan modul Admin Terniva, database PostgreSQL, dan sistem generate dokumen PDF.
+
+Saya susun dengan pendekatan bahwa setiap modul mempunyai:
+
+* Nama Modul: kelompok fungsi dalam sistem.
+
+* Nama Laporan/Dokumen: dokumen yang dibuat, dikelola, atau dihasilkan sistem.
+
+* Fungsi: kegunaan dokumen dalam proses bisnis.
+
+* Fields: field atau kolom data yang perlu tersedia di sistem.
+
+Saya juga membedakan dokumen yang diinput manual, dokumen yang dihasilkan otomatis, dan dokumen eksternal yang diunggah.
+
+### MASTER TERNIVA – DOCUMENT MANAGEMENT
+
+### 9 Modul Utama
+
+### 01
+
+Legalitas
+
+### 02
+
+Proposal
+
+### 03
+
+Transaksi
+
+### 04
+
+Keuangan
+
+### 05
+
+QC & Delivery
+
+### 06
+
+Operasional
+
+### 07
+
+Standar Produk
+
+### 08
+
+Ekspor
+
+### 09
+
+Arsip
+
+### 01\. Legalitas & Kemitraan
+
+Tujuan: mengelola identitas, legalitas, pendaftaran, dan perjanjian seluruh pihak yang terlibat dalam ekosistem Terniva.
+
+| Nama laporan/dokumen                | Fungsi                                   | Fields utama                                                                                   |
+| ----------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Data Profil Mitra                   | Identitas petani, peternak, nelayan      | ID Mitra, nama, NIK/identitas, alamat, telepon, email, jenis mitra, wilayah                    |
+| Data Legalitas Mitra                | Verifikasi legalitas                     | ID Mitra, NIB, NPWP, bentuk usaha, nomor dokumen, tanggal terbit, masa berlaku, file           |
+| Form Pendaftaran Mitra              | Registrasi mitra baru                    | Nama, jenis usaha, komoditas, kapasitas produksi, lokasi, kontak, rekening                     |
+| Form Verifikasi Mitra               | Validasi calon mitra                     | ID Mitra, dokumen diperiksa, hasil verifikasi, petugas, tanggal, status, catatan               |
+| Proposal Kemitraan Pemasok          | Penawaran kerja sama kepada pemasok      | Nomor proposal, tanggal, profil Terniva, jenis kerja sama, manfaat, hak dan kewajiban          |
+| MOU Pemasok                         | Kesepahaman dengan pemasok               | Nomor MOU, pihak pertama, pihak kedua, ruang lingkup, jangka waktu, kewajiban, tanda tangan    |
+| Perjanjian Kerja Sama Pemasok       | Perjanjian operasional dan komersial     | Nomor kontrak, harga, volume, kualitas, pembayaran, pengiriman, penalti, penyelesaian sengketa |
+| Proposal Kerja Sama Horeca          | Penawaran kepada hotel/restoran/kafe     | Nomor proposal, nama buyer, kebutuhan produk, kapasitas, skema pembelian, harga                |
+| MOU Buyer/Horeca                    | Kesepahaman dengan pembeli               | Nomor MOU, identitas buyer, ruang lingkup, jangka waktu, komitmen, tanda tangan                |
+| Perjanjian Kerja Sama Buyer         | Mengatur transaksi berulang              | Harga, volume, spesifikasi, jadwal, pembayaran, pengiriman, retur, tanggung jawab              |
+| Surat Pernyataan Kepemilikan Produk | Memastikan pemasok berhak menjual produk | ID Mitra, jenis produk, sumber produk, pernyataan kepemilikan, tanggal, tanda tangan           |
+| Surat Komitmen Pasokan              | Menetapkan komitmen pasokan              | ID Mitra, komoditas, volume, periode, frekuensi, harga indikatif, tanda tangan                 |
+
+### 02\. Proposal & Penawaran
+
+Tujuan: mengelola proses pemasaran dan penawaran produk kepada buyer maupun penawaran pembelian dari supplier.
+
+| Nama laporan/dokumen      | Fungsi                            | Fields utama                                                                         |
+| ------------------------- | --------------------------------- | ------------------------------------------------------------------------------------ |
+| Proposal Penawaran Produk | Menawarkan produk kepada buyer    | Nomor proposal, buyer, produk, grade, volume, harga, masa berlaku                    |
+| Surat Penawaran Harga     | Menyampaikan harga produk         | Nomor penawaran, tanggal, buyer, produk, satuan, harga, MOQ, masa berlaku            |
+| Daftar Harga Produk       | Master harga komoditas            | Kode produk, nama produk, grade, satuan, harga supplier, harga jual, tanggal berlaku |
+| Form Permintaan Produk    | Mencatat kebutuhan buyer          | Nomor permintaan, buyer, produk, spesifikasi, volume, lokasi, tanggal kebutuhan      |
+| Form Penawaran Supplier   | Mengumpulkan penawaran pemasok    | Supplier, produk, volume, harga, kapasitas, lokasi, periode berlaku                  |
+| Perbandingan Penawaran    | Membandingkan beberapa supplier   | Produk, supplier, harga, grade, volume, biaya logistik, estimasi total               |
+| Konfirmasi Penawaran      | Persetujuan harga dan spesifikasi | Nomor penawaran, buyer, produk, harga final, volume, status, tanggal persetujuan     |
+
+### 03\. Transaksi & Penjualan
+
+Tujuan: mencatat seluruh siklus transaksi dari permintaan buyer, pemesanan, konfirmasi, hingga serah terima.
+
+| Nama laporan/dokumen      | Fungsi                                      | Fields utama                                                                                          |
+| ------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Purchase Order (PO)       | Pesanan resmi dari buyer                    | Nomor PO, buyer, tanggal, produk, qty, harga, total, alamat pengiriman                                |
+| Sales Order (SO)          | Pencatatan pesanan penjualan Terniva        | Nomor SO, nomor PO, buyer, produk, qty, harga jual, total, status                                     |
+| Purchase Order Supplier   | Pemesanan produk kepada pemasok             | Nomor PO supplier, mitra, produk, qty, harga beli, jadwal, lokasi pengambilan                         |
+| Konfirmasi Pesanan        | Konfirmasi penerimaan pesanan               | Nomor konfirmasi, nomor SO, buyer, produk, qty, harga, jadwal, status                                 |
+| Delivery Order (DO)       | Instruksi pengeluaran dan pengiriman barang | Nomor DO, nomor SO, penerima, produk, qty, gudang/lokasi, tanggal                                     |
+| Surat Jalan               | Dokumen pendamping pengiriman               | Nomor surat jalan, nomor DO, pengirim, penerima, kendaraan, sopir, produk, qty, tanggal, tanda tangan |
+| Berita Acara Serah Terima | Bukti penyerahan barang                     | Nomor BA, nomor SO, pengirim, penerima, produk, qty diterima, kondisi, waktu, tanda tangan            |
+| Nota Retur                | Pencatatan pengembalian barang              | Nomor retur, nomor transaksi, produk, qty, alasan, kondisi, nilai retur, status                       |
+| Berita Acara Komplain     | Dokumentasi keluhan buyer                   | Nomor BA, buyer, nomor transaksi, jenis komplain, kronologi, bukti, penyelesaian                      |
+| Laporan Penjualan         | Rekap penjualan berdasarkan periode         | Periode, nomor SO, buyer, produk, qty, harga, total penjualan, status                                 |
+| Laporan Transaksi Mitra   | Rekap transaksi per pemasok                 | Mitra, produk, qty, harga beli, total pembelian, tanggal, status pembayaran                           |
+
+### 04\. Keuangan & Invoice
+
+Tujuan: mengelola tagihan, pembayaran, piutang, kewajiban kepada mitra, serta pendapatan Terniva.
+
+| Nama laporan/dokumen     | Fungsi                                    | Fields utama                                                                           |
+| ------------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------- |
+| Proforma Invoice         | Tagihan sementara sebelum transaksi final | Nomor PI, buyer, produk, qty, harga, subtotal, biaya, total, termin                    |
+| Invoice Penjualan        | Tagihan resmi kepada buyer                | Nomor invoice, nomor SO, buyer, tanggal, jatuh tempo, produk, qty, harga, pajak, total |
+| Invoice Pembelian        | Pencatatan tagihan pemasok                | Nomor invoice supplier, mitra, nomor PO, produk, qty, harga, total                     |
+| Kwitansi Pembayaran      | Bukti penerimaan pembayaran               | Nomor kwitansi, nomor invoice, pembayar, jumlah, metode, tanggal, penerima             |
+| Bukti Pembayaran Mitra   | Bukti pembayaran kepada pemasok           | Nomor pembayaran, mitra, nomor PO, jumlah, metode, rekening, tanggal                   |
+| Rekap Pembayaran         | Monitoring pembayaran transaksi           | Nomor transaksi, invoice, nilai tagihan, nilai dibayar, sisa, tanggal, status          |
+| Laporan Piutang Buyer    | Monitoring tagihan yang belum lunas       | Buyer, nomor invoice, tanggal invoice, jatuh tempo, total, dibayar, sisa               |
+| Laporan Hutang Mitra     | Monitoring kewajiban kepada pemasok       | Mitra, nomor invoice, nilai hutang, dibayar, sisa, jatuh tempo                         |
+| Laporan Margin Transaksi | Menghitung keuntungan transaksi           | Nomor SO, harga beli, harga jual, logistik, biaya lain, margin kotor, margin bersih    |
+| Laporan Komisi Terniva   | Menghitung pendapatan jasa/komisi         | Nomor transaksi, nilai transaksi, skema komisi, persentase, nilai komisi               |
+| Credit Note / Debit Note | Penyesuaian nilai tagihan                 | Nomor dokumen, invoice referensi, alasan, nilai penyesuaian, pajak, tanggal            |
+| Rekonsiliasi Keuangan    | Mencocokkan transaksi dengan pembayaran   | Nomor transaksi, invoice, mutasi bank/payment gateway, nilai, selisih, status          |
+
+Catatan desain: Terniva sebaiknya mendukung dua skema transaksi:
+
+* Reseller/principal: Terniva membeli produk dari pemasok dan menjualnya kembali kepada buyer.
+
+* Marketplace/intermediary: Terniva mempertemukan pemasok dengan buyer dan memperoleh komisi atau biaya jasa.
+
+Kedua model harus dibedakan dalam sistem karena memengaruhi invoice, pencatatan pendapatan, pajak, dan tanggung jawab transaksi.
+
+### 05\. Quality Control & Pengiriman
+
+Tujuan: memastikan produk sesuai spesifikasi buyer dan proses pengiriman terdokumentasi.
+
+| Nama laporan/dokumen       | Fungsi                      | Fields utama                                                                 |
+| -------------------------- | --------------------------- | ---------------------------------------------------------------------------- |
+| Form Pemeriksaan QC        | Memeriksa kondisi produk    | Nomor QC, produk, supplier, tanggal, parameter, hasil, petugas               |
+| Form Sortasi & Grading     | Menentukan kelas produk     | Produk, grade, standar, qty per grade, hasil sortasi                         |
+| Form Penimbangan           | Mencatat berat aktual       | Nomor timbang, produk, berat bruto, tara, netto, satuan, petugas             |
+| Berita Acara Pemeriksaan   | Bukti hasil pemeriksaan     | Nomor BA, produk, qty, kondisi, hasil pemeriksaan, foto, petugas             |
+| Form Dokumentasi Produk    | Bukti visual kondisi produk | Produk, supplier, tanggal, foto, lokasi, keterangan                          |
+| Form Monitoring Pengiriman | Melacak proses pengiriman   | Nomor DO, ekspedisi, kendaraan, sopir, lokasi awal, tujuan, waktu, status    |
+| Bukti Penerimaan Buyer     | Konfirmasi barang diterima  | Nomor DO, buyer, tanggal, qty diterima, kondisi, nama penerima, tanda tangan |
+| Form Produk Rusak          | Mencatat kerusakan produk   | Nomor kasus, produk, qty rusak, penyebab, nilai kerugian, foto               |
+| Form Evaluasi Ekspedisi    | Evaluasi mitra logistik     | Nama ekspedisi, transaksi, ketepatan waktu, kondisi barang, biaya, penilaian |
+
+### 06\. Operasional & SOP
+
+Tujuan: membuat operasional Terniva berjalan konsisten, terukur, dan memungkinkan otomatisasi.
+
+| Nama laporan/dokumen      | Fungsi                               | Fields utama                                                   |
+| ------------------------- | ------------------------------------ | -------------------------------------------------------------- |
+| Master Database Supplier  | Daftar pemasok aktif                 | ID supplier, nama, wilayah, komoditas, kapasitas, status       |
+| Master Database Buyer     | Daftar pembeli                       | ID buyer, nama perusahaan, kategori, alamat, kebutuhan, kontak |
+| Master Database Ekspedisi | Data mitra pengiriman                | ID ekspedisi, nama, layanan, wilayah, kontak, tarif            |
+| Master Ketersediaan Stok  | Monitoring ketersediaan produk       | Produk, supplier, stok, satuan, lokasi, tanggal update         |
+| Master Katalog Produk     | Katalog komoditas Terniva            | Kode produk, nama, kategori, deskripsi, grade, satuan, foto    |
+| SOP Verifikasi Mitra      | Standar verifikasi pemasok dan buyer | Nomor SOP, tujuan, ruang lingkup, tahapan, PIC, versi          |
+| SOP Pemesanan             | Standar pemrosesan pesanan           | Nomor SOP, tahapan, PIC, SLA, dokumen terkait                  |
+| SOP Pembayaran            | Standar penerimaan dan pembayaran    | Nomor SOP, metode, otorisasi, verifikasi, rekonsiliasi         |
+| SOP Pengiriman            | Standar pengiriman barang            | Nomor SOP, persiapan, QC, pengemasan, pengiriman, penerimaan   |
+| SOP Komplain & Retur      | Penanganan keluhan                   | Nomor SOP, kategori, batas waktu, PIC, penyelesaian            |
+| Form Evaluasi Supplier    | Mengukur performa pemasok            | Supplier, kualitas, harga, kapasitas, ketepatan pasokan, skor  |
+| Form Evaluasi Buyer       | Mengukur performa buyer              | Buyer, volume, pembayaran, frekuensi, komplain, skor           |
+| Form Evaluasi Ekspedisi   | Mengukur performa pengiriman         | Ekspedisi, biaya, waktu, kondisi barang, skor                  |
+
+### 07\. Standar Produk & Traceability
+
+Tujuan: memastikan setiap komoditas memiliki standar kualitas dan riwayat asal-usul yang dapat ditelusuri.
+
+| Nama laporan/dokumen     | Fungsi                             | Fields utama                                                              |
+| ------------------------ | ---------------------------------- | ------------------------------------------------------------------------- |
+| Master Standar Produk    | Standar setiap komoditas           | Kode produk, nama, spesifikasi, grade, ukuran, satuan                     |
+| Standar Grade Produk     | Klasifikasi kualitas               | Produk, grade, ukuran, warna, toleransi cacat, standar                    |
+| Standar Kemasan          | Standar pengemasan                 | Produk, jenis kemasan, kapasitas, berat, label                            |
+| Standar Penyimpanan      | Ketentuan penyimpanan              | Produk, suhu, kelembapan, durasi, metode                                  |
+| Standar Pengangkutan     | Ketentuan transportasi             | Produk, jenis kendaraan, suhu, durasi, penanganan                         |
+| Form Riwayat Panen       | Merekam asal hasil pertanian       | Supplier, lahan, lokasi, komoditas, tanggal tanam, panen, qty             |
+| Form Riwayat Peternakan  | Merekam asal produk ternak         | Peternak, lokasi, jenis ternak, populasi, riwayat pemeliharaan, kesehatan |
+| Form Riwayat Penangkapan | Merekam asal hasil perikanan       | Nelayan, kapal, lokasi tangkap, tanggal, jenis ikan, qty                  |
+| Form Traceability Produk | Menelusuri perjalanan produk       | Batch ID, supplier, asal, tanggal produksi/panen, QC, pengiriman, buyer   |
+| Laporan Batch Produk     | Rekap produk per kelompok produksi | Batch ID, komoditas, asal, qty, grade, status, tanggal                    |
+| Form Sertifikasi Produk  | Mencatat sertifikat produk         | Produk, jenis sertifikat, nomor, penerbit, tanggal, masa berlaku, file    |
+
+Rekomendasi teknis: Gunakan `Batch ID` sebagai penghubung utama antara asal produk, pemeriksaan QC, pengiriman, dan buyer. Jangan hanya mengandalkan nama produk.
+
+### 08\. Export Documentation
+
+Tujuan: mempersiapkan, mengelola, dan mengarsipkan seluruh dokumen transaksi ekspor Terniva.
+
+| Nama laporan/dokumen        | Fungsi                                      | Fields utama                                                                              |
+| --------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Export Buyer Profile        | Data importir luar negeri                   | Buyer ID, nama perusahaan, negara, alamat, kontak, tax ID, izin usaha                     |
+| Export Sales Contract       | Kontrak jual beli ekspor                    | Nomor kontrak, eksportir, importir, produk, HS Code, qty, harga, Incoterms, pembayaran    |
+| Export Order Confirmation   | Konfirmasi pesanan ekspor                   | Nomor order, buyer, produk, qty, harga, negara tujuan, jadwal                             |
+| Proforma Invoice            | Penawaran tagihan awal                      | Nomor PI, buyer, produk, qty, harga, mata uang, biaya, total                              |
+| Commercial Invoice          | Tagihan komersial ekspor                    | Nomor CI, eksportir, importir, HS Code, deskripsi, qty, unit price, total, currency       |
+| Packing List                | Detail kemasan                              | Nomor PL, invoice, jumlah kemasan, jenis kemasan, berat netto, bruto, dimensi             |
+| Shipping Instruction        | Instruksi kepada forwarder                  | Nomor SI, shipper, consignee, notify party, pelabuhan, kapal, kontainer                   |
+| Bill of Lading              | Dokumen pengangkutan laut                   | Nomor BL, shipper, consignee, vessel, port of loading, port of discharge, container       |
+| Airway Bill                 | Dokumen pengangkutan udara                  | Nomor AWB, shipper, consignee, airport, berat, jumlah paket                               |
+| Certificate of Origin       | Bukti negara asal barang                    | Nomor COO/SKA, eksportir, importir, negara asal, produk, HS Code                          |
+| Phytosanitary Certificate   | Sertifikat kesehatan tumbuhan               | Nomor sertifikat, eksportir, importir, komoditas, asal, negara tujuan                     |
+| Health Certificate          | Sertifikat kesehatan produk hewan/perikanan | Nomor sertifikat, produk, fasilitas, negara tujuan, hasil pemeriksaan                     |
+| Certificate of Analysis     | Hasil pengujian laboratorium                | Nomor COA, produk, batch, parameter, hasil uji, laboratorium                              |
+| Fumigation Certificate      | Bukti fumigasi jika dipersyaratkan          | Nomor sertifikat, barang, metode, tanggal, pelaksana                                      |
+| Insurance Certificate       | Bukti perlindungan asuransi                 | Nomor polis, nilai pertanggungan, barang, perjalanan, perusahaan asuransi                 |
+| Pemberitahuan Ekspor Barang | Administrasi kepabeanan                     | Nomor PEB, eksportir, HS Code, FOB value, negara tujuan, dokumen pendukung                |
+| Nota Pelayanan Ekspor       | Bukti pelayanan kepabeanan                  | Nomor NPE, nomor PEB, tanggal, status                                                     |
+| Export Document Checklist   | Memastikan kelengkapan dokumen              | Nomor ekspor, nama dokumen, wajib/tidak, status, tanggal, file                            |
+| Export Cost Calculation     | Menghitung biaya ekspor                     | Harga beli, packaging, QC, trucking, handling, freight, insurance, customs, biaya lainnya |
+| Export Profitability Report | Mengukur keuntungan ekspor                  | Nomor ekspor, nilai kontrak, total biaya, margin, mata uang, kurs                         |
+| Export Shipment Tracking    | Monitoring pengiriman internasional         | Nomor shipment, forwarder, vessel/flight, ETD, ETA, pelabuhan, status                     |
+
+Catatan: dokumen pengangkutan, sertifikat, dan kepabeanan mengikuti skema pengiriman dan persyaratan negara tujuan. Sistem Terniva cukup menyediakan pencatatan, checklist, upload, dan monitoring dokumen; penerbitan tetap melalui pihak berwenang atau penyedia layanan terkait.
+
+### 09\. Arsip & Laporan
+
+Tujuan: menyediakan pusat penyimpanan dokumen dan laporan manajemen yang dapat ditelusuri berdasarkan transaksi, mitra, periode, dan kategori.
+
+| Nama laporan/dokumen          | Fungsi                                           | Fields utama                                                               |
+| ----------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------- |
+| Master Arsip Dokumen          | Pusat seluruh dokumen                            | Document ID, nomor dokumen, nama, modul, kategori, tanggal, file, versi    |
+| Laporan Dokumen Kedaluwarsa   | Monitoring masa berlaku legalitas dan sertifikat | Nama dokumen, pemilik, nomor, tanggal berlaku, tanggal kedaluwarsa, status |
+| Laporan Dokumen Belum Lengkap | Mengetahui kekurangan dokumen                    | Mitra/transaksi, jenis dokumen, dokumen tersedia, kekurangan, PIC          |
+| Laporan Aktivitas Dokumen     | Melacak pembuatan dan perubahan dokumen          | Document ID, pengguna, aktivitas, tanggal, versi, keterangan               |
+| Laporan Kemitraan             | Rekap pemasok dan buyer                          | Jumlah mitra, kategori, wilayah, status, tanggal bergabung                 |
+| Laporan Transaksi             | Rekap aktivitas perdagangan                      | Nomor transaksi, buyer, supplier, produk, qty, nilai, status               |
+| Laporan Penjualan             | Monitoring performa penjualan                    | Periode, produk, buyer, volume, omzet, pertumbuhan                         |
+| Laporan Pembelian             | Monitoring pembelian dari mitra                  | Supplier, produk, volume, nilai pembelian, periode                         |
+| Laporan Keuangan              | Ringkasan performa keuangan                      | Omzet, pembelian, biaya operasional, margin, piutang, hutang               |
+| Laporan Performa Mitra        | Mengukur kinerja supplier dan buyer              | Mitra, volume transaksi, kualitas, ketepatan, komplain, skor               |
+| Laporan Performa Pengiriman   | Mengukur performa logistik                       | Ekspedisi, jumlah pengiriman, tepat waktu, kerusakan, biaya                |
+| Laporan Ekspor                | Rekap kegiatan ekspor                            | Negara tujuan, buyer, komoditas, qty, nilai ekspor, biaya, margin          |
+| Dashboard Manajemen           | Ringkasan kondisi bisnis                         | Total mitra, buyer, transaksi, omzet, margin, piutang, ekspor              |
+
+### 10\. Standard Fields yang harus dimiliki setiap dokumen
+
+Agar seluruh modul konsisten dan bisa terintegrasi dengan backend, saya sarankan setiap dokumen memiliki metadata standar.
+
+| Field           | Fungsi                                              |
+| --------------- | --------------------------------------------------- |
+| document_id     | ID unik dokumen                                     |
+| document_number | Nomor dokumen otomatis                              |
+| document_type   | Jenis dokumen                                       |
+| module_code     | Kode modul                                          |
+| reference_type  | Jenis referensi, misalnya transaksi atau mitra      |
+| reference_id    | ID transaksi/mitra terkait                          |
+| document_date   | Tanggal dokumen                                     |
+| created_by      | Pembuat dokumen                                     |
+| approved_by     | Pihak yang menyetujui                               |
+| approval_date   | Tanggal persetujuan                                 |
+| document_status | Draft, Review, Approved, Sent, Completed, Cancelled |
+| version         | Versi dokumen                                       |
+| file_url        | Lokasi file PDF                                     |
+| attachment_url  | Lampiran pendukung                                  |
+| notes           | Catatan                                             |
+| created_at      | Waktu dibuat                                        |
+| updated_at      | Waktu diperbarui                                    |
+
+Status dokumen yang disarankan:
+
+`DRAFT → REVIEW → APPROVED → SENT → COMPLETED`
+
+Status tambahan: `REJECTED`, `REVISED`, `EXPIRED`, `CANCELLED`.
+
+### 11\. Rekomendasi integrasi antar-modul
+
+Agar tidak menjadi sekadar aplikasi penyimpanan dokumen, hubungan proses bisnisnya sebaiknya seperti ini:
+
+### Alur bisnis Terniva
+
+01\. Legalitas & Kemitraan
+
+Supplier dan buyer terverifikasi
+
+02\. Proposal & Penawaran
+
+Penawaran produk dan harga
+
+03\. Transaksi & Penjualan
+
+PO → SO → DO
+
+04\. Keuangan & Invoice
+
+Tagihan dan pembayaran
+
+05\. QC & Pengiriman
+
+Pemeriksaan dan serah terima
+
+09\. Arsip & Laporan
+
+Seluruh aktivitas terdokumentasi
+
+Kedua modul ini mendukung seluruh proses bisnis di atas.Jalur khusus untuk transaksi ekspor, terhubung dengan transaksi, keuangan, QC, dan traceability.
+
+### 12\. Rekomendasi implementasi database dan Admin Terniva
+
+Supaya tidak terjadi duplikasi data, saya menyarankan beberapa prinsip teknis:
+
+| Komponen        | Rekomendasi                                                     |
+| --------------- | --------------------------------------------------------------- |
+| Master Mitra    | Satu database untuk petani, peternak, nelayan, supplier         |
+| Master Buyer    | Satu database untuk hotel, restoran, kafe, perusahaan, importir |
+| Master Produk   | Satu katalog komoditas terpusat                                 |
+| Transaction ID  | Satu ID untuk menghubungkan seluruh dokumen transaksi           |
+| Document ID     | Satu ID unik untuk setiap dokumen                               |
+| Batch ID        | Identitas asal-usul produk                                      |
+| Approval        | Persetujuan berdasarkan role dan kewenangan                     |
+| PDF Generator   | Generate dokumen dari data transaksi                            |
+| Digital Archive | Penyimpanan dokumen terpusat                                    |
+| Audit Trail     | Riwayat aktivitas pengguna dan perubahan dokumen                |
+
+Saran penting untuk arsitektur: jangan membuat tabel database terpisah untuk setiap jenis laporan. Buat master data, tabel transaksi, tabel dokumen, dan relasi antarentitas. Dokumen seperti invoice, surat jalan, dan PO dapat dihasilkan dari data transaksi yang sama.
+
+### 13\. Urutan pengembangan yang saya rekomendasikan
+
+| Prioritas | Modul                         | Target                      |
+| --------- | ----------------------------- | --------------------------- |
+| P1        | Legalitas & Kemitraan         | Wajib MVP                   |
+| P1        | Proposal & Penawaran          | Wajib MVP                   |
+| P1        | Transaksi & Penjualan         | Wajib MVP                   |
+| P1        | Keuangan & Invoice            | Wajib MVP                   |
+| P1        | QC & Pengiriman               | Wajib MVP                   |
+| P2        | Operasional & SOP             | Penguatan operasional       |
+| P2        | Standar Produk & Traceability | Penguatan kualitas          |
+| P3        | Export Documentation          | Persiapan ekspor            |
+| P2        | Arsip & Laporan               | Dibangun bertahap sejak MVP |
+
+Menurut saya, Document Management Terniva sebaiknya menjadi satu modul utama di Admin Panel, bukan aplikasi terpisah.
+
+Dengan begitu, ketika Admin membuat Sales Order, sistem bisa menghasilkan invoice, delivery order, surat jalan, dan berita acara serah terima tanpa menginput ulang data.
+
+Langkah selanjutnya yang bernilai adalah menurunkan rancangan ini menjadi spesifikasi database PostgreSQL: tabel, kolom, tipe data, primary key, foreign key, dan relasi antarmodul.
+
+📋
+
+Review kelengkapan dokumen Terniva setiap bulan
+
+Ketuk untuk menyiapkan
