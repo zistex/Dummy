@@ -31,7 +31,6 @@ interface PengajuanViewProps {
 export const PengajuanView: React.FC<PengajuanViewProps> = ({ onNotify }) => {
   const [items, setItems] = useState<PengajuanItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterProyek, setFilterProyek] = useState<string>('ALL');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -39,9 +38,9 @@ export const PengajuanView: React.FC<PengajuanViewProps> = ({ onNotify }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedDetail, setSelectedDetail] = useState<PengajuanItem | null>(null);
 
-  // Form State for New Pengajuan
+  // Form State for New Pengajuan (Strictly locked to Terniva)
   const [kategori, setKategori] = useState('operasional');
-  const [namaProyek, setNamaProyek] = useState('KawanEdu');
+  const namaProyek = 'Terniva';
   const [namaPemohon, setNamaPemohon] = useState('Rizki Firmansyah');
   const [jumlah, setJumlah] = useState<number>(8500000);
   const [bankTujuan, setBankTujuan] = useState('BCA');
@@ -56,12 +55,12 @@ export const PengajuanView: React.FC<PengajuanViewProps> = ({ onNotify }) => {
   const [lampiranUrl, setLampiranUrl] = useState('https://api.inovasidigitalkreasi.com/api/uploads/documents/Invoice_AWS_KawanEdu_Nov.pdf');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch Pengajuan
+  // Fetch Pengajuan (Locked to Terniva)
   const loadData = async () => {
     setIsLoading(true);
     try {
       const data = await pengajuanService.getPengajuan({
-        namaProyek: filterProyek,
+        namaProyek: 'Terniva',
         status: filterStatus
       });
       setItems(data);
@@ -74,7 +73,7 @@ export const PengajuanView: React.FC<PengajuanViewProps> = ({ onNotify }) => {
 
   useEffect(() => {
     loadData();
-  }, [filterProyek, filterStatus]);
+  }, [filterStatus]);
 
   // Handle File Selection & Upload
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,17 +227,10 @@ export const PengajuanView: React.FC<PengajuanViewProps> = ({ onNotify }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Proyek Filter */}
-          <select
-            value={filterProyek}
-            onChange={(e) => setFilterProyek(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 px-2.5 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
-          >
-            <option value="ALL">Semua Proyek</option>
-            <option value="KawanEdu">KawanEdu</option>
-            <option value="Terniva">Terniva</option>
-            <option value="Scrava">Scrava</option>
-          </select>
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-semibold text-emerald-800">
+            <span>Proyek:</span>
+            <span className="font-bold">Terniva</span>
+          </div>
 
           {/* Status Filter */}
           <select
@@ -499,15 +491,12 @@ export const PengajuanView: React.FC<PengajuanViewProps> = ({ onNotify }) => {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1">Nama Proyek</label>
-                  <select
-                    value={namaProyek}
-                    onChange={(e) => setNamaProyek(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="KawanEdu">KawanEdu</option>
-                    <option value="Terniva">Terniva</option>
-                    <option value="Scrava">Scrava</option>
-                  </select>
+                  <div className="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg text-slate-900 font-semibold flex items-center justify-between">
+                    <span>Terniva</span>
+                    <span className="text-[10px] text-emerald-800 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded font-mono">
+                      Khusus Terniva
+                    </span>
+                  </div>
                 </div>
 
                 <div>

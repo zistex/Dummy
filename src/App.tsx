@@ -16,6 +16,10 @@ import { DocumentModal } from './components/DocumentModal';
 import { QuickTransactionWizard } from './components/QuickTransactionWizard';
 import { AddDocumentModal } from './components/AddDocumentModal';
 import { PengajuanView } from './components/PengajuanView';
+import { TransaksiView } from './components/TransaksiView';
+import { KeuanganView } from './components/KeuanganView';
+import { LaporanManajemenView } from './components/LaporanManajemenView';
+import { EksporView } from './components/EksporView';
 import { INITIAL_DOCUMENTS, INITIAL_BATCHES, INITIAL_TRANSACTION_CHAINS } from './data/initialData';
 import { TernivaDocument, TransactionChain, BatchTraceability, ModuleCode, DocumentStatus } from './types';
 import { CheckCircle2 } from 'lucide-react';
@@ -239,6 +243,26 @@ export default function App() {
             />
           )}
 
+          {currentTab === 'transaksi' && (
+            <TransaksiView />
+          )}
+
+          {currentTab === 'keuangan' && (
+            <KeuanganView />
+          )}
+
+          {currentTab === 'laporan' && (
+            <LaporanManajemenView />
+          )}
+
+          {currentTab === 'ekspor' && (
+            <EksporView onNotify={showToast} />
+          )}
+
+          {currentTab === 'pengajuan' && (
+            <PengajuanView onNotify={showToast} />
+          )}
+
           {currentTab === 'flow' && (
             <DocumentFlowGuide
               documents={documents}
@@ -274,10 +298,6 @@ export default function App() {
               documents={documents}
               onViewDocByNumber={handleViewDocByNumber}
             />
-          )}
-
-          {currentTab === 'pengajuan' && (
-            <PengajuanView onNotify={showToast} />
           )}
         </main>
 

@@ -13,11 +13,25 @@ import {
   ChevronRight,
   TrendingUp,
   User,
-  SendHorizontal
+  SendHorizontal,
+  ArrowLeftRight,
+  Wallet,
+  BarChart3,
+  Globe2
 } from 'lucide-react';
 import { ModuleCode } from '../types';
 
-export type NavTab = 'dashboard' | 'flow' | 'documents' | 'chains' | 'traceability' | 'pengajuan';
+export type NavTab = 
+  | 'dashboard' 
+  | 'transaksi' 
+  | 'keuangan' 
+  | 'laporan' 
+  | 'ekspor'
+  | 'pengajuan' 
+  | 'flow' 
+  | 'documents' 
+  | 'chains' 
+  | 'traceability';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -52,6 +66,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: null
     },
     {
+      id: 'transaksi' as NavTab,
+      label: 'Transaksi',
+      icon: ArrowLeftRight,
+      badge: 'Lokal (8 Tahap)'
+    },
+    {
+      id: 'keuangan' as NavTab,
+      label: 'Keuangan',
+      icon: Wallet,
+      badge: '8 Dokumen'
+    },
+    {
+      id: 'laporan' as NavTab,
+      label: 'Laporan',
+      icon: BarChart3,
+      badge: '12 Laporan'
+    },
+    {
+      id: 'ekspor' as NavTab,
+      label: 'Ekspor',
+      icon: Globe2,
+      badge: 'Ekspor (7 Tahap)'
+    },
+    {
+      id: 'pengajuan' as NavTab,
+      label: 'Pengajuan ke Finance',
+      icon: SendHorizontal,
+      badge: null
+    },
+    {
       id: 'flow' as NavTab,
       label: 'Alur Dokumen',
       icon: GitFork,
@@ -73,12 +117,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'traceability' as NavTab,
       label: 'Traceability Batch',
       icon: QrCode,
-      badge: null
-    },
-    {
-      id: 'pengajuan' as NavTab,
-      label: 'Pengajuan ke Finance',
-      icon: SendHorizontal,
       badge: null
     }
   ];
@@ -114,7 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-xs tracking-tight text-white">PT. Inovasi Digital Kreasi</span>
               </div>
-              <div className="text-[10px] text-slate-400">Terniva Document Management</div>
+              <div className="text-[11px] text-emerald-400 font-semibold tracking-wide">Terniva</div>
             </div>
           </div>
 

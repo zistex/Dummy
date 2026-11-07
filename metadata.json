@@ -1,6 +1,6 @@
 {
-  "name": "TERNIVA – Document Management",
-  "description": "Sistem Manajemen Dokumen Terpadu Terniva untuk alur legalitas, transaksi, pengiriman, QC, invoice, hingga arsip ekosistem agrikultur.",
+  "name": "PT. Inovasi Digital Kreasi – Terniva",
+  "description": "Sistem Manajemen Dokumen Terpadu, Transaksi, Keuangan, Ekspor, dan Pengajuan PT. Inovasi Digital Kreasi – Terniva.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

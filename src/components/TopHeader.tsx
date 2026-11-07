@@ -20,6 +20,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     switch (tab) {
       case 'dashboard':
         return 'Statistik & Metrik Dokumen';
+      case 'transaksi':
+        return 'Dokumen Transaksi Pemasok & Buyer';
+      case 'keuangan':
+        return 'Dokumen & Monitoring Keuangan';
+      case 'laporan':
+        return 'Laporan Manajemen Bisnis Terniva';
+      case 'ekspor':
+        return 'Perdagangan & Manajemen Ekspor';
       case 'flow':
         return 'Alur Dokumen (4 Langkah Mudah)';
       case 'documents':
